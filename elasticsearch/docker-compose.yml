@@ -1,0 +1,87 @@
+#参考源流：https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html
+version: '3.8'
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: es01
+    environment:
+      - node.name=es01
+      - node.master=true
+      - node.data=true
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.seed_hosts=es01,es02,es03
+      - transport.connect_timeout=5s
+      - network.publish_host=172.1.13.11
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      default:
+        ipv4_address: 172.1.13.11
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: es02
+    environment:
+      - node.name=es02
+      - node.master=true
+      - node.data=true
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.seed_hosts=es01,es02,es03
+      - transport.connect_timeout=5s
+      - network.publish_host=172.1.13.12
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    networks:
+      default:
+        ipv4_address: 172.1.13.12
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: es03
+    environment:
+      - node.name=es03
+      - node.master=true
+      - node.data=true
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.seed_hosts=es01,es02,es03
+      - transport.connect_timeout=5s
+      - network.publish_host=172.1.13.13
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    networks:
+      default:
+        ipv4_address: 172.1.13.13
+
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+
+networks:
+  default:
+    external:
+      name: mybridge
