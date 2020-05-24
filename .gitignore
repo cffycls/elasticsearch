@@ -1,1 +1,5 @@
 .idea/
+es_cluster/es01/data
+es_cluster/es02/data
+es_cluster/es03/data
+single/data

@@ -16,7 +16,8 @@ curl -X GET "localhost:9200/_cat/nodes?v&pretty"
 
 2、运行
 ====
-测试暂未成功启动
+es.sh 开发者单机模式
+× 集群测试暂未成功启动
 
 
 
